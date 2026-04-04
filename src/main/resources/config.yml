@@ -1,0 +1,28 @@
+# Crystal Plugin Configuration
+# Ore Generation Configuration for Skyblock Server
+
+# Pre-cache generation pool size for a user.
+pool_size: 64
+
+# Refill interval in milliseconds for per-user async cache workers.
+refill_interval: 5000
+
+# Trigger an early refill when cache size drops below this ratio.
+refill_threshold_ratio: 0.30
+
+# Material returned when player cache is empty.
+fallback_type: STONE
+
+# Profile id used as baseline fallback.
+default_profile: default
+
+# Empty list means all worlds are enabled.
+enabled_worlds: []
+
+# Blocks that can act as generator base (checked relative to flow direction).
+generator_blocks:
+  - COBBLESTONE
+
+water_tick:
+  # Number of server ticks between water source registry sweeps.
+  interval: 20

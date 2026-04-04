@@ -1,0 +1,39 @@
+# Crystal Plugin Profiles Configuration
+# profiles.<id>.priority and permission select which profile a player receives.
+# profiles.<id>.weights controls weighted ore randomization.
+
+profiles:
+  default:
+    priority: 0
+    permission: ""
+    weights:
+      STONE: 120
+      COAL_ORE: 45
+      IRON_ORE: 22
+      COPPER_ORE: 24
+      GOLD_ORE: 10
+
+  miner_plus:
+    priority: 25
+    permission: crystal.profile.miner_plus
+    weights:
+      STONE: 90
+      COAL_ORE: 55
+      IRON_ORE: 40
+      COPPER_ORE: 30
+      GOLD_ORE: 18
+      REDSTONE_ORE: 14
+      LAPIS_ORE: 10
+
+  elite:
+    priority: 50
+    permission: crystal.profile.elite
+    weights:
+      STONE: 70
+      COAL_ORE: 40
+      IRON_ORE: 36
+      GOLD_ORE: 26
+      REDSTONE_ORE: 20
+      LAPIS_ORE: 15
+      DIAMOND_ORE: 8
+      EMERALD_ORE: 5

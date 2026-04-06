@@ -21,8 +21,10 @@ enabled_worlds: []
 
 # Blocks that can act as generator base (checked relative to flow direction).
 generator_blocks:
-  - COBBLESTONE
+  - OAK_FENCE
 
 water_tick:
   # Number of server ticks between water source registry sweeps.
-  interval: 20
+  interval: 60
+  # Number of tracked water sources processed per sweep (clamped to 50-100).
+  chunk_size: 70

@@ -7,7 +7,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class WaterTickerService {
@@ -19,6 +20,8 @@ public class WaterTickerService {
     private final WaterSourceRegistry registry;
 
     private int taskId = -1;
+    private List<WaterSource> sweepSnapshot = List.of();
+    private int sweepCursor = 0;
 
     public WaterTickerService(JavaPlugin plugin, CrystalSettings settings, WaterSourceRegistry registry) {
         this.plugin = plugin;
@@ -41,29 +44,55 @@ public class WaterTickerService {
             taskId = -1;
         }
         registry.view().clear();
+        sweepSnapshot = List.of();
+        sweepCursor = 0;
     }
 
     private void tick() {
-        Iterator<WaterSource> iterator = registry.view().iterator();
-        while (iterator.hasNext()) {
-            WaterSource source = iterator.next();
+        if (registry.size() == 0) {
+            sweepSnapshot = List.of();
+            sweepCursor = 0;
+            return;
+        }
+
+        if (sweepCursor >= sweepSnapshot.size()) {
+            sweepSnapshot = new ArrayList<>(registry.view());
+            sweepCursor = 0;
+            if (sweepSnapshot.isEmpty()) {
+                return;
+            }
+        }
+
+        int chunkSize = settings.waterTickChunkSize();
+        int processed = 0;
+        while (processed < chunkSize && sweepCursor < sweepSnapshot.size()) {
+            WaterSource source = sweepSnapshot.get(sweepCursor++);
+            processed++;
+
+            if (!registry.view().contains(source)) {
+                continue;
+            }
+
             World world = Bukkit.getWorld(source.worldName());
             if (world == null) {
-                iterator.remove();
+                registry.view().remove(source);
                 continue;
             }
 
             Block block = world.getBlockAt(source.x(), source.y(), source.z());
             if (!isWater(block.getType())) {
-                iterator.remove();
+                registry.view().remove(source);
                 continue;
             }
 
             boolean hasNearbyPlayer = world.getPlayers().stream()
                     .anyMatch(player -> player.getLocation().distanceSquared(block.getLocation()) <= PLAYER_RANGE_SQUARED);
             if (!hasNearbyPlayer) {
-                iterator.remove();
+                registry.view().remove(source);
+                continue;
             }
+
+            block.getState().update(true);
         }
     }
 
@@ -71,4 +100,3 @@ public class WaterTickerService {
         return material.name().toUpperCase(Locale.ROOT).contains("WATER");
     }
 }
-

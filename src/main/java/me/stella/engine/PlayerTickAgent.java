@@ -15,6 +15,7 @@ public class PlayerTickAgent {
 
     private final UUID playerId;
     private final CrystalSettings settings;
+    private final OreProfile profile;
     private final WeightedMaterialPicker picker;
     private final ConcurrentLinkedDeque<Material> cache;
     private final ResilientScheduler scheduler;
@@ -27,11 +28,16 @@ public class PlayerTickAgent {
         this.playerId = playerId;
         this.settings = settings;
         this.scheduler = scheduler;
+        this.profile = profile;
         this.picker = new WeightedMaterialPicker(profile.weights());
         this.cache = new ConcurrentLinkedDeque<>();
         this.closed = new AtomicBoolean(false);
         this.refillRunning = new AtomicBoolean(false);
         this.refillHandle = ResilientScheduler.TaskHandle.NO_OP;
+    }
+
+    public OreProfile getProfile() {
+        return this.profile;
     }
 
     public void start() {

@@ -33,9 +33,8 @@ public class OreGenerationListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onWaterFlow(BlockFromToEvent event) {
         Block flowing = event.getBlock();
-        if (!isWater(flowing.getType())) {
+        if (!isWater(flowing.getType()))
             return;
-        }
 
         if (!settings.isWorldEnabled(flowing.getWorld().getName())) {
             return;
@@ -48,18 +47,13 @@ public class OreGenerationListener implements Listener {
 
         Block toBlock = event.getToBlock();
         Block generatorBase = toBlock.getRelative(event.getFace());
-        if (!settings.isGeneratorBlock(generatorBase.getType())) {
+        if (!settings.isGeneratorBlock(generatorBase.getType()))
             return;
-        }
-
-        Optional<PlayerTickAgent> optionalAgent = tickEngineManager.findClosestAgent(toBlock.getLocation());
-        if (optionalAgent.isEmpty()) {
+        Optional<PlayerTickAgent> optionalAgent = tickEngineManager.findBestAgent(toBlock.getLocation());
+        if (optionalAgent.isEmpty())
             return;
-        }
-
         PlayerTickAgent agent = optionalAgent.get();
         Material generated = agent.pop();
-
         CrystalOreGenerateEvent generateEvent = new CrystalOreGenerateEvent(
                 flowing,
                 toBlock,
@@ -67,10 +61,8 @@ public class OreGenerationListener implements Listener {
                 generated
         );
         Bukkit.getPluginManager().callEvent(generateEvent);
-        if (generateEvent.isCancelled()) {
+        if (generateEvent.isCancelled())
             return;
-        }
-
         toBlock.setType(generateEvent.generatedMaterial(), false);
     }
 

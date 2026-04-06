@@ -18,7 +18,8 @@ public record CrystalSettings(
         String defaultProfileId,
         Set<String> enabledWorlds,
         Set<Material> generatorBlocks,
-        long waterTickIntervalTicks
+        long waterTickIntervalTicks,
+        int waterTickChunkSize
 ) {
 
     public static CrystalSettings load(JavaPlugin plugin) {
@@ -55,6 +56,7 @@ public record CrystalSettings(
         }
 
         long waterTickIntervalTicks = Math.max(1L, config.getLong("water_tick.interval", 20L));
+        int waterTickChunkSize = clamp(config.getInt("water_tick.chunk_size", 75), 50, 100);
 
         return new CrystalSettings(
                 poolSize,
@@ -64,7 +66,8 @@ public record CrystalSettings(
                 defaultProfileId,
                 Collections.unmodifiableSet(enabledWorlds),
                 Collections.unmodifiableSet(generatorBlocks),
-                waterTickIntervalTicks
+                waterTickIntervalTicks,
+                waterTickChunkSize
         );
     }
 
@@ -95,5 +98,8 @@ public record CrystalSettings(
     private static double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
     }
-}
 
+    private static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
+}

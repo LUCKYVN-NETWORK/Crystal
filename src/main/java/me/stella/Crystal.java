@@ -4,6 +4,9 @@ import me.stella.config.CrystalSettings;
 import me.stella.engine.PlayerConnectionListener;
 import me.stella.engine.PlayerTickEngineManager;
 import me.stella.generation.OreGenerationListener;
+import me.stella.marker.ChunkPersistentGeneratedBlockMarkerService;
+import me.stella.marker.GeneratedBlockLifecycleListener;
+import me.stella.marker.GeneratedBlockMarkerService;
 import me.stella.profile.ProfileRepository;
 import me.stella.profile.ProfileSelector;
 import me.stella.common.ResilientScheduler;
@@ -13,6 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +34,7 @@ public final class Crystal extends JavaPlugin {
     private PlayerTickEngineManager tickEngineManager;
     private WaterSourceRegistry waterSourceRegistry;
     private WaterTickerService waterTickerService;
+    private GeneratedBlockMarkerService generatedBlockMarkerService;
 
     @Override
     public void onEnable() {
@@ -50,10 +55,19 @@ public final class Crystal extends JavaPlugin {
         this.tickEngineManager = new PlayerTickEngineManager(this, scheduler, settings, profileSelector);
         this.waterSourceRegistry = new WaterSourceRegistry();
         this.waterTickerService = new WaterTickerService(this, settings, waterSourceRegistry);
+        this.generatedBlockMarkerService = new ChunkPersistentGeneratedBlockMarkerService(this);
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new PlayerConnectionListener(tickEngineManager), this);
-        pluginManager.registerEvents(new OreGenerationListener(settings, tickEngineManager, waterSourceRegistry), this);
+        pluginManager.registerEvents(new OreGenerationListener(settings, tickEngineManager, waterSourceRegistry, generatedBlockMarkerService), this);
+        pluginManager.registerEvents(new GeneratedBlockLifecycleListener(generatedBlockMarkerService), this);
+
+        getServer().getServicesManager().register(
+                GeneratedBlockMarkerService.class,
+                generatedBlockMarkerService,
+                this,
+                ServicePriority.Normal
+        );
 
         for (Player onlinePlayer : getServer().getOnlinePlayers()) {
             tickEngineManager.assign(onlinePlayer);
@@ -65,6 +79,7 @@ public final class Crystal extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        getServer().getServicesManager().unregisterAll(this);
         if (waterTickerService != null) {
             waterTickerService.stop();
         }

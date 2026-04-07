@@ -9,11 +9,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class WaterTickerService {
-
-    private static final double PLAYER_RANGE_SQUARED = 32.0D * 32.0D;
 
     private final JavaPlugin plugin;
     private final CrystalSettings settings;
@@ -65,38 +62,38 @@ public class WaterTickerService {
 
         int chunkSize = settings.waterTickChunkSize();
         int processed = 0;
+
         while (processed < chunkSize && sweepCursor < sweepSnapshot.size()) {
             WaterSource source = sweepSnapshot.get(sweepCursor++);
             processed++;
 
-            if (!registry.view().contains(source)) {
-                continue;
-            }
+            if (!registry.view().contains(source)) continue;
 
             World world = Bukkit.getWorld(source.worldName());
             if (world == null) {
+                // World is gone entirely, safe to purge
                 registry.view().remove(source);
+                continue;
+            }
+
+            // Fast chunk check: Bit shift block coords to get chunk coords
+            int chunkX = source.x() >> 4;
+            int chunkZ = source.z() >> 4;
+
+            if (!world.isChunkLoaded(chunkX, chunkZ)) {
+                // Skip the tick, DO NOT remove from registry, DO NOT call getBlockAt()
                 continue;
             }
 
             Block block = world.getBlockAt(source.x(), source.y(), source.z());
-            if (!isWater(block.getType())) {
+            if (block.getType() != Material.WATER) {
+                // Lazy Cleanup: It's no longer water, safely remove it from memory
                 registry.view().remove(source);
                 continue;
             }
 
-            boolean hasNearbyPlayer = world.getPlayers().stream()
-                    .anyMatch(player -> player.getLocation().distanceSquared(block.getLocation()) <= PLAYER_RANGE_SQUARED);
-            if (!hasNearbyPlayer) {
-                registry.view().remove(source);
-                continue;
-            }
-
+            // Trigger flow physics
             block.getState().update(true);
         }
-    }
-
-    private boolean isWater(Material material) {
-        return material.name().toUpperCase(Locale.ROOT).contains("WATER");
     }
 }

@@ -5,11 +5,11 @@ import me.stella.config.CrystalSettings;
 import me.stella.profile.OreProfile;
 import org.bukkit.Material;
 
-import java.time.Duration;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlayerTickAgent {
 
@@ -18,11 +18,10 @@ public class PlayerTickAgent {
     private final OreProfile profile;
     private final WeightedMaterialPicker picker;
     private final ConcurrentLinkedDeque<Material> cache;
+    private final AtomicInteger cacheSize;
     private final ResilientScheduler scheduler;
     private final AtomicBoolean closed;
     private final AtomicBoolean refillRunning;
-
-    private ResilientScheduler.TaskHandle<Void> refillHandle;
 
     public PlayerTickAgent(UUID playerId, OreProfile profile, CrystalSettings settings, ResilientScheduler scheduler) {
         this.playerId = playerId;
@@ -31,9 +30,9 @@ public class PlayerTickAgent {
         this.profile = profile;
         this.picker = new WeightedMaterialPicker(profile.weights());
         this.cache = new ConcurrentLinkedDeque<>();
+        this.cacheSize = new AtomicInteger(0);
         this.closed = new AtomicBoolean(false);
         this.refillRunning = new AtomicBoolean(false);
-        this.refillHandle = ResilientScheduler.TaskHandle.NO_OP;
     }
 
     public OreProfile getProfile() {
@@ -41,12 +40,18 @@ public class PlayerTickAgent {
     }
 
     public void start() {
+        // No per-agent repeating task: external engine should call tickRefill().
         refillNow();
-        refillHandle = scheduler.scheduleAsyncAtFixedRate(
-                Duration.ofMillis(settings.refillIntervalMs()),
-                Duration.ofMillis(settings.refillIntervalMs()),
-                this::refillNow
-        );
+    }
+
+    public void tickRefill() {
+        if (closed.get()) {
+            return;
+        }
+
+        if (cacheSize.get() < settings.refillThresholdSize()) {
+            refillNow();
+        }
     }
 
     public Material pop() {
@@ -60,7 +65,9 @@ public class PlayerTickAgent {
             return settings.fallbackType();
         }
 
-        if (cache.size() < settings.refillThresholdSize()) {
+        cacheSize.decrementAndGet();
+
+        if (cacheSize.get() < settings.refillThresholdSize()) {
             refillNow();
         }
 
@@ -69,8 +76,8 @@ public class PlayerTickAgent {
 
     public void close() {
         if (closed.compareAndSet(false, true)) {
-            refillHandle.cancel();
             cache.clear();
+            cacheSize.set(0);
         }
     }
 
@@ -86,7 +93,9 @@ public class PlayerTickAgent {
         scheduler.async(() -> {
             try {
                 int maxSize = settings.poolSize();
-                if (cache.size() >= maxSize) {
+                int currentSize = cacheSize.get();
+                int toAdd = maxSize - currentSize;
+                if (toAdd <= 0) {
                     return;
                 }
 
@@ -100,11 +109,17 @@ public class PlayerTickAgent {
                     secondPrevious = descending.next();
                 }
 
-                while (!closed.get() && cache.size() < maxSize) {
+                int added = 0;
+                for (int i = 0; i < toAdd && !closed.get(); i++) {
                     Material next = picker.nextMaterial(previous, secondPrevious, settings.fallbackType());
                     cache.offerLast(next);
                     secondPrevious = previous;
                     previous = next;
+                    added++;
+                }
+
+                if (added > 0) {
+                    cacheSize.addAndGet(added);
                 }
             } finally {
                 refillRunning.set(false);
@@ -112,4 +127,3 @@ public class PlayerTickAgent {
         });
     }
 }
-

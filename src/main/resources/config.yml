@@ -2,10 +2,10 @@
 # Ore Generation Configuration for Skyblock Server
 
 # Pre-cache generation pool size for a user.
-pool_size: 64
+pool_size: 256
 
 # Refill interval in milliseconds for per-user async cache workers.
-refill_interval: 5000
+refill_interval: 100
 
 # Trigger an early refill when cache size drops below this ratio.
 refill_threshold_ratio: 0.30

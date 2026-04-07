@@ -35,16 +35,13 @@ public class OreGenerationListener implements Listener {
         Block flowing = event.getBlock();
         if (!isWater(flowing.getType()))
             return;
-
         if (!settings.isWorldEnabled(flowing.getWorld().getName())) {
             return;
         }
-
         Block source = WaterSourceLocator.findSource(flowing);
         if (source != null) {
             waterSourceRegistry.register(source.getLocation());
         }
-
         Block toBlock = event.getToBlock();
         Block generatorBase = toBlock.getRelative(event.getFace());
         if (!settings.isGeneratorBlock(generatorBase.getType()))
@@ -63,7 +60,8 @@ public class OreGenerationListener implements Listener {
         Bukkit.getPluginManager().callEvent(generateEvent);
         if (generateEvent.isCancelled())
             return;
-        toBlock.setType(generateEvent.generatedMaterial(), false);
+        event.setCancelled(true);
+        toBlock.setType(generateEvent.generatedMaterial());
     }
 
     private boolean isWater(Material material) {

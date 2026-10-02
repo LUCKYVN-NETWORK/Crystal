@@ -79,13 +79,10 @@ public class PlayerTickEngineManager {
             return Optional.empty();
         }
 
-        // 256 radius (which equates to your 2<<15 distanceSquared box)
+        // ponytail: 256-block radius bounds the chunk-slice scan; raise if generators span larger islands.
         double radius = 256.0;
 
-        // target.getNearbyPlayers() uses native spatial hashing - infinitely faster than getWorld().getPlayers()
         return target.getNearbyPlayers(radius).stream()
-                // Filter out exact same location if needed
-                .filter(player -> player.getLocation().distanceSquared(target) > 0)
                 .min(Comparator.comparingDouble(player -> player.getLocation().distanceSquared(target)))
                 .map(Player::getUniqueId)
                 .map(agents::get);
@@ -98,4 +95,3 @@ public class PlayerTickEngineManager {
         agents.clear();
     }
 }
-

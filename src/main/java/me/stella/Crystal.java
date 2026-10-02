@@ -18,9 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.Map;
 
 public final class Crystal extends JavaPlugin {
@@ -48,7 +46,7 @@ public final class Crystal extends JavaPlugin {
         Map<String, me.stella.profile.OreProfile> profiles = profileRepository.loadProfiles();
         this.profileSelector = new ProfileSelector(profiles, settings.defaultProfileId());
 
-        int cores = ResilientScheduler.detectCpuCores();
+        int cores = Runtime.getRuntime().availableProcessors();
         int asyncThreads = ResilientScheduler.computeAsyncThreads(cores, 1, 2);
         this.scheduler = new ResilientScheduler(getLogger(), asyncThreads);
 
@@ -89,14 +87,5 @@ public final class Crystal extends JavaPlugin {
         if (scheduler != null) {
             scheduler.close();
         }
-    }
-
-    @Override
-    public void saveResource(@NotNull String path, boolean replace) {
-        File location = new File(this.getDataFolder(), path);
-        if (!replace && location.exists()) {
-            return;
-        }
-        super.saveResource(path, replace);
     }
 }

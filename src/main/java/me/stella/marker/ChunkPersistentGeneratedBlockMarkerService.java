@@ -108,7 +108,8 @@ public class ChunkPersistentGeneratedBlockMarkerService implements GeneratedBloc
     }
 
     private static int pack(int x, int y, int z) {
-        return (y << 8) | ((z & 15) << 4) | (x & 15);
+        // ponytail: 10-bit masked Y is unique for vanilla range (-64..320); widen if custom heights exceed 1024.
+        // Changing this format invalidates markers written by older builds.
+        return ((y & 0x3FF) << 8) | ((z & 15) << 4) | (x & 15);
     }
 }
-

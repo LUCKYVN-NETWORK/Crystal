@@ -10,9 +10,4 @@ public record WaterSource(String worldName, int x, int y, int z) {
         }
         return new WaterSource(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
-
-    public String key() {
-        return worldName + "," + x + "," + y + "," + z;
-    }
 }
-

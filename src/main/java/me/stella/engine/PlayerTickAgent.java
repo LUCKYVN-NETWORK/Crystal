@@ -40,18 +40,7 @@ public class PlayerTickAgent {
     }
 
     public void start() {
-        // No per-agent repeating task: external engine should call tickRefill().
         refillNow();
-    }
-
-    public void tickRefill() {
-        if (closed.get()) {
-            return;
-        }
-
-        if (cacheSize.get() < settings.refillThresholdSize()) {
-            refillNow();
-        }
     }
 
     public Material pop() {

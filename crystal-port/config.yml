@@ -1,0 +1,45 @@
+# Crystal Plugin Configuration
+# Ported from E:\LuckyVN\bad-skyforge (OreGen3) - 2026-10-03
+# Drop-in: plugins/Crystal/config.yml
+
+# Pre-cache generation pool size for a user.
+pool_size: 256
+
+# Refill interval in milliseconds for per-user async cache workers.
+refill_interval: 100
+
+# Trigger an early refill when cache size drops below this ratio.
+refill_threshold_ratio: 0.30
+
+# Material returned when player cache is empty.
+fallback_type: STONE
+
+# OreGen3 defaultGenerator: 1 (no permission, priority 0)
+default_profile: "1"
+
+# OreGen3 world blacklist disabled -> all worlds enabled.
+enabled_worlds: []
+
+# OreGen3 blocks list. Legacy names converted:
+#   FENCE -> OAK_FENCE, IRON_FENCE -> IRON_BARS
+generator_blocks:
+  - OAK_FENCE
+  - SPRUCE_FENCE
+  - ACACIA_FENCE
+  - JUNGLE_FENCE
+  - MANGROVE_FENCE
+  - CHERRY_FENCE
+  - PALE_OAK_FENCE
+  - BAMBOO_FENCE
+  - CRIMSON_FENCE
+  - WARPED_FENCE
+  - NETHER_BRICK_FENCE
+  - BIRCH_FENCE
+  - DARK_OAK_FENCE
+  - IRON_BARS
+
+water_tick:
+  # Number of server ticks between water source registry sweeps.
+  interval: 60
+  # Number of tracked water sources processed per sweep (clamped to 50-100).
+  chunk_size: 70

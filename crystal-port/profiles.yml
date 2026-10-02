@@ -1,0 +1,188 @@
+# Crystal Plugin Profiles Configuration
+# Ported from E:\LuckyVN\bad-skyforge (OreGen3 generators 1-15) - 2026-10-03
+# Drop-in: plugins/Crystal/profiles.yml
+# OreGen3 getGeneratorMode: highest == Crystal priority-desc selection.
+
+profiles:
+  1:
+    priority: 0
+    permission: ""
+    weights:
+      COBBLESTONE: 90.0
+      COAL_ORE: 10.0
+
+  2:
+    priority: 2
+    permission: oregen.capdo2
+    weights:
+      COBBLESTONE: 90.0
+      COAL_ORE: 5.0
+      IRON_ORE: 5.0
+
+  3:
+    priority: 3
+    permission: oregen.capdo3
+    weights:
+      COBBLESTONE: 85.0
+      COAL_ORE: 5.0
+      IRON_ORE: 5.0
+      GOLD_ORE: 3.0
+
+  4:
+    priority: 4
+    permission: oregen.capdo4
+    weights:
+      COBBLESTONE: 79.0
+      COAL_ORE: 5.0
+      IRON_ORE: 5.0
+      LAPIS_ORE: 3.0
+      REDSTONE_ORE: 3.0
+      GOLD_ORE: 3.0
+
+  5:
+    priority: 5
+    permission: oregen.capdo5
+    weights:
+      COBBLESTONE: 78.0
+      COAL_ORE: 5.0
+      IRON_ORE: 5.0
+      LAPIS_ORE: 3.0
+      REDSTONE_ORE: 3.0
+      GOLD_ORE: 3.0
+
+  6:
+    priority: 6
+    permission: oregen.capdo6
+    weights:
+      COBBLESTONE: 75.0
+      COAL_ORE: 5.0
+      IRON_ORE: 5.0
+      LAPIS_ORE: 3.0
+      REDSTONE_ORE: 3.0
+      GOLD_ORE: 4.0
+      DIAMOND_ORE: 2.0
+
+  7:
+    priority: 7
+    permission: oregen.capdo7
+    weights:
+      COBBLESTONE: 72.0
+      COAL_ORE: 5.0
+      IRON_ORE: 5.0
+      LAPIS_ORE: 3.0
+      REDSTONE_ORE: 3.0
+      GOLD_ORE: 4.0
+      DIAMOND_ORE: 2.0
+      EMERALD_ORE: 2.0
+
+  8:
+    priority: 8
+    permission: oregen.capdo8
+    weights:
+      COBBLESTONE: 70.0
+      COAL_ORE: 5.0
+      IRON_ORE: 5.0
+      LAPIS_ORE: 3.0
+      REDSTONE_ORE: 3.0
+      GOLD_ORE: 4.0
+      DIAMOND_ORE: 3.0
+      EMERALD_ORE: 3.0
+      ANCIENT_DEBRIS: 2.0
+
+  9:
+    priority: 9
+    permission: oregen.capdo9
+    weights:
+      COBBLESTONE: 66.0
+      COAL_ORE: 6.0
+      IRON_ORE: 6.0
+      LAPIS_ORE: 3.0
+      REDSTONE_ORE: 3.0
+      GOLD_ORE: 4.0
+      DIAMOND_ORE: 3.0
+      EMERALD_ORE: 3.0
+      ANCIENT_DEBRIS: 3.0
+
+  10:
+    priority: 10
+    permission: oregen.capdo10
+    weights:
+      COBBLESTONE: 60.0
+      COAL_ORE: 6.0
+      IRON_ORE: 6.0
+      LAPIS_ORE: 4.0
+      REDSTONE_ORE: 4.0
+      GOLD_ORE: 5.0
+      DIAMOND_ORE: 4.0
+      EMERALD_ORE: 4.0
+      ANCIENT_DEBRIS: 4.0
+
+  11:
+    priority: 11
+    permission: oregen.capdo11
+    weights:
+      COBBLESTONE: 56.0
+      COAL_ORE: 7.0
+      IRON_ORE: 7.0
+      LAPIS_ORE: 4.0
+      REDSTONE_ORE: 4.0
+      GOLD_ORE: 5.0
+      DIAMOND_ORE: 4.0
+      EMERALD_ORE: 4.0
+      ANCIENT_DEBRIS: 5.0
+
+  12:
+    priority: 12
+    permission: oregen.capdo12
+    weights:
+      COBBLESTONE: 52.0
+      COAL_ORE: 7.0
+      IRON_ORE: 7.0
+      LAPIS_ORE: 5.0
+      REDSTONE_ORE: 5.0
+      GOLD_ORE: 5.0
+      DIAMOND_ORE: 5.0
+      EMERALD_ORE: 5.0
+      ANCIENT_DEBRIS: 5.0
+
+  13:
+    priority: 13
+    permission: oregen.capdo13
+    weights:
+      COBBLESTONE: 50.0
+      COAL_ORE: 7.0
+      IRON_ORE: 7.0
+      LAPIS_ORE: 5.0
+      REDSTONE_ORE: 5.0
+      GOLD_ORE: 6.0
+      DIAMOND_ORE: 5.0
+      EMERALD_ORE: 5.0
+      ANCIENT_DEBRIS: 6.0
+
+  14:
+    priority: 14
+    permission: oregen.capdo14
+    weights:
+      COBBLESTONE: 47.0
+      COAL_ORE: 7.0
+      IRON_ORE: 7.0
+      LAPIS_ORE: 5.0
+      REDSTONE_ORE: 5.0
+      GOLD_ORE: 6.0
+      DIAMOND_ORE: 6.0
+      EMERALD_ORE: 6.0
+      ANCIENT_DEBRIS: 6.0
+
+  15:
+    priority: 15
+    permission: oregen.capdo15
+    weights:
+      COBBLESTONE: 43.0
+      COAL_ORE: 8.0
+      IRON_ORE: 8.0
+      LAPIS_ORE: 5.0
+      REDSTONE_ORE: 5.0
+      GOLD_ORE: 6.0
+      DIAMOND_ORE: 7.0
+      EMERALD_ORE: 7.0
+      ANCIENT_DEBRIS: 6.0

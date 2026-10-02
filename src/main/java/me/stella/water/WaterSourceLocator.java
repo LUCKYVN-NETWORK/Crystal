@@ -29,7 +29,6 @@ public final class WaterSourceLocator {
         while (!queue.isEmpty() && visited.size() < MAX_VISITS) {
             Block candidate = queue.pollFirst();
 
-            // Bit-pack coordinates for lightning-fast, zero-allocation hashing
             long key = packLocation(candidate.getX(), candidate.getY(), candidate.getZ());
 
             if (!visited.add(key)) {
@@ -67,8 +66,7 @@ public final class WaterSourceLocator {
     }
 
     private static long packLocation(int x, int y, int z) {
-        // Reserves 27 bits for X and Z (safely covers +/- 30 million block world limits)
-        // and 10 bits for Y (covers up to 1024 height)
-        return ((long) x & 0x7FFFFFF) | (((long) z & 0x7FFFFFF) << 27) | ((long) y << 54);
+        // 26 bits X | 26 bits Z | 12 bits Y = 64. Sign-safe: +/- 64M horizontal, +/- 2048 vertical.
+        return ((long) (x & 0x3FFFFFF) << 38) | ((long) (z & 0x3FFFFFF) << 12) | (y & 0xFFF);
     }
 }

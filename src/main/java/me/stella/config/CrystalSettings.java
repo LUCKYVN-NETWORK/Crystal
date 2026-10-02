@@ -27,8 +27,8 @@ public record CrystalSettings(
         FileConfiguration config = plugin.getConfig();
         Logger logger = plugin.getLogger();
 
-        int poolSize = Math.max(1, config.getInt("pool_size", 64));
-        long refillIntervalMs = Math.max(50L, config.getLong("refill_interval", 5000L));
+        int poolSize = Math.max(1, config.getInt("pool_size", 256));
+        long refillIntervalMs = Math.max(50L, config.getLong("refill_interval", 100L));
         double refillThresholdRatio = clamp(config.getDouble("refill_threshold_ratio", 0.30D), 0.05D, 0.95D);
 
         Material fallbackType = parseMaterial(config.getString("fallback_type", "STONE"), Material.STONE, logger, "fallback_type");

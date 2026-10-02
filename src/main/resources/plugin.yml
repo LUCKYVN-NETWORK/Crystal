@@ -2,3 +2,4 @@ name: Crystal
 version: '2026.04'
 main: me.stella.Crystal
 api-version: '1.21'
+depend: [SuperiorSkyblock2]
